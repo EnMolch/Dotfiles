@@ -31,9 +31,6 @@ Plug 'folke/tokyonight.nvim'
 Plug 'romgrk/doom-one.vim'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'romgrk/barbar.nvim'
-Plug 'tanvirtin/monokai.nvim'
-Plug 'dracula/vim'
 
 call plug#end()
 
@@ -42,7 +39,6 @@ set termguicolors
 "let g:tokyonight_transparent = 'true'
 let g:tokyonight_style = "night"
 colo tokyonight
-"colo dracula
 
 set timeoutlen=1000
 
