@@ -1,9 +1,10 @@
 syntax enable
-set number relativenumber
+set number 
 set tabstop=4
 set shiftwidth=4
 set expandtab
 set mouse=a
+set nowrap
 set clipboard=unnamedplus " Copy from / to system clipboard
 autocmd BufEnter *.S setfiletype asm
 autocmd BufEnter *.s setfiletype asm
@@ -13,7 +14,7 @@ call plug#begin()
 
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
-Plug 'Shougo/defx.nvim'
+Plug 'Shougo/defx.nvim' 
 Plug 'kassio/neoterm'
 Plug 'scrooloose/nerdcommenter'
 Plug 'neomake/neomake'
@@ -31,6 +32,8 @@ Plug 'romgrk/doom-one.vim'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
+Plug 'tanvirtin/monokai.nvim'
+Plug 'dracula/vim'
 
 call plug#end()
 
@@ -38,8 +41,8 @@ call plug#end()
 set termguicolors
 "let g:tokyonight_transparent = 'true'
 let g:tokyonight_style = "night"
-colorscheme tokyonight
-" colorscheme onedark
+colo tokyonight
+"colo dracula
 
 set timeoutlen=1000
 
@@ -69,17 +72,25 @@ dap.configurations.python = {
       },
     }
 
-dap.adapters.cpp = {
-  type = 'executable',
-  attach = {
-	pidProperty = "pid",
-	pidSelect = "ask"
+dap.adapters.lldb = {
+    type = 'executable';
+    command = '/usr/bin/lldb-vscode';
+    name = "lldb";
+}
+
+dap.configurations.cpp = {
+  {
+    name = "Launch",
+    type = "lldb",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+    runInTerminal = false,
   },
-  command = 'lldb-vscode', -- my binary was called 'lldb-vscode-11'
-  env = {
-	LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES"
-  },
-  name = "lldb"
 }
 
 local nvim_lsp = require('lspconfig')
@@ -130,8 +141,8 @@ end
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
         underline = false,
-        virtual_text = false,
-        signs = true,
+        virtual_text = true,
+        signs = false,
         update_in_insert = false,
     }
 )
