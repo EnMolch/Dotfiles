@@ -32,6 +32,7 @@ import XMonad.Layout.MultiToggle.Instances
 -- hooks
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Hooks.ManageDocks (avoidStruts, docksEventHook, manageDocks, ToggleStruts(..))
+import XMonad.Hooks.EwmhDesktops
 
 import Data.Default as D
 import qualified XMonad.StackSet as W
@@ -52,7 +53,7 @@ myFocusFollowsMouse = False
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 1
+myBorderWidth   = 0
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -93,7 +94,7 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
+myWorkspaces    = ["web","stuff","LoL","term","5","6","7","8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -111,6 +112,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch rofi
     , ((modm,xK_d), spawn "/bin/rofi -show run")
 
+    , ((modm,xK_w), spawn "/bin/rofi -show window")
     -- close focused window
     , ((modm .|. shiftMask, xK_q     ), kill)
 
@@ -315,6 +317,10 @@ myStartupHook = do
     spawnOnce "picom &"
     spawnOnce "feh --bg-fill ~/Pictures/203530.jpg"
     spawnOnce "setxkbmap -model pc86 -layout de -variant e2"
+    spawnOnce "nm-applet &"
+    -- Displaying the systemtry stuff from nm-applet and stuff
+    -- Do all the tray stuff before initializing this !
+    spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x282c34  --height 22 &"
     spawnOnce "xset r rate 260 40"
 
 ------------------------------------------------------------------------
@@ -324,7 +330,7 @@ myStartupHook = do
 --
 main = do
     xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/xmobarrc"
-    xmonad D.def {
+    xmonad $ ewmh D.def {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
